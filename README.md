@@ -116,7 +116,3 @@ Roadmap
 
 MIT License © Aliou Ba
 
-Si tu veux, je peux aussi te générer **une version encore plus "GitHub-ready" avec badges (npm, node, build) et instructions très claires pour les débutants**, prête à être directement publiée.  
-
-Veux‑tu que je fasse ça ?
-
