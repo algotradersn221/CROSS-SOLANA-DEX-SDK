@@ -30,19 +30,20 @@ interface ResultatSwap {
 }
 
 // Initialisation du SDK Raydium
-const raydium = await Raydium.load({
+/*const raydium = await Raydium.load({
     connection,
     owner: wallet // Wallet propriétaire (anonymisé si publié)
 });
-
+*/
 /**
  * Récupère la liste des pools Raydium pour un token donné
  * @param token mint du token
  */
+/*
 export async function recupererPoolsRaydium(token: string) {
     return await raydium.api.getPoolList();
 }
-
+*/
 /**
  * Récupère une cotation pour un swap sur Raydium
  * @param inputMint Mint du token à envoyer
@@ -85,7 +86,7 @@ export const CotationRaydium = async (
  * @param poolKeys Pools correspondants
  * @param montant Montant à échanger (en plus petite unité)
  */
-export const effectuerSwapRaydium = async (swapResponse: any, poolKeys: any, montant: number) => {
+export const executeSwapRaydium = async (swapResponse: any, poolKeys: any, montant: number) => {
     const inputMint = swapResponse.data.routePlan[0].fromMint;
     const outputMint = swapResponse.data.routePlan[swapResponse.data.routePlan.length - 1].toMint;
 
@@ -128,4 +129,5 @@ export const effectuerSwapRaydium = async (swapResponse: any, poolKeys: any, mon
 
     // Simulation de la transaction (affichage)
     printSimulate([tx]);
+    return tx;
 };

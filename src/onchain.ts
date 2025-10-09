@@ -3,7 +3,7 @@ import 'dotenv/config';
 import { Connection, PublicKey } from "@solana/web3.js";
 import { getAccount, getMint } from "@solana/spl-token";
 import { sleep } from "./dextools.js";
-import { obtenirCotationPumpSwap } from "./pumpswap.js";
+//import { obtenirCotationPumpSwap } from "./pumpswap.js";
 import BN from "bn.js";
 export type PoolInfos = {
     pubkey: string;
@@ -32,7 +32,6 @@ async function getPoolAddressFromReserves(reserveX: string) {
 export async function pummpswapPools(mintAddress: string, min_reserves_quotes: number, min_pool_count: number): Promise<PoolInfos[]> {
     const SHYFT_API_KEY = process.env.SHYFT_KEY;
     if (!SHYFT_API_KEY) throw new Error("⛔ Clé SHYFT_KEY non définie dans .env");
-
     const query = `
     query GetPools {
       pump_fun_amm_Pool(
@@ -53,6 +52,8 @@ export async function pummpswapPools(mintAddress: string, min_reserves_quotes: n
   `;
 
     try {
+
+
         const response = await fetch(
             `https://programs.shyft.to/v0/graphql/accounts?api_key=${SHYFT_API_KEY}&network=mainnet-beta`,
             {
@@ -64,7 +65,7 @@ export async function pummpswapPools(mintAddress: string, min_reserves_quotes: n
 
         const { data, errors } = (await response.json()) as { data?: any; errors?: any };
         if (errors) {
-            console.error("Erreur GraphQL :", errors);
+            console.log("Erreur GraphQL :", errors);
             return [];
         }
         const filtredPool: PoolInfos[] = [];
@@ -104,13 +105,15 @@ export async function pummpswapPools(mintAddress: string, min_reserves_quotes: n
         }
 
         return filtredPool;
+
+        // return poolpump;
     } catch (err: any) {
         console.error("Erreur lors de la requête Shyft :", err.message);
         return [];
     }
 }
 
-/*type PoolInfosMeteora = {
+type PoolInfosMeteora = {
     pool_address: string; // ici on met le compte SPL de la base comme identifiant du pool
     base_mint: string;
     quote_mint: string;
@@ -120,7 +123,8 @@ export async function pummpswapPools(mintAddress: string, min_reserves_quotes: n
     baseReserve?: number;
     quoteReserve?: number;
 };
-*/
+
+
 export async function meteoraPools(
     mintAddress: string,
     min_reserves_quotes: number,
@@ -238,6 +242,7 @@ export async function meteoraPools(
         return [];
     }
 }
+
 /*
 // Exemple d’utilisation
 (async () => {
@@ -261,7 +266,8 @@ export async function meteoraPools(
         console.log(`Quote reserve: ${pool.quoteReserve}`);
     }
 })();
-*/
+
+
 const pools = await pummpswapPools(
     "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", 3, 3
 );
@@ -272,7 +278,7 @@ console.log(`✅ ${pools.length} pool(s) trouvé(s) où le token est base :\n`);
         //console.log(pool);
         await obtenirCotationPumpSwap(pool, new BN(1000), "buy", 50);
         //break;
-        /*
+        
         console.log("──────────────────────────────");
         console.log(`Adress: ${pool.pool_address}`);
         console.log(`Base mint: ${pool.base_mint}`);
@@ -282,10 +288,9 @@ console.log(`✅ ${pools.length} pool(s) trouvé(s) où le token est base :\n`);
         console.log(`Creator: ${pool.creator}`);
         console.log(`Base reserve: ${pool.baseReserve}`);
         console.log(`Quote reserve: ${pool.quoteReserve}`);
-        */
 
     }
 
 })();
 
-
+*/

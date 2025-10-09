@@ -2,7 +2,12 @@
 import fetch from "node-fetch";
 import { delay } from "./dextools.js"; // utilitaire delay
 import BN from "bn.js";
-import { Transaction, PublicKey } from '@solana/web3.js';
+import { Transaction, PublicKey, VersionedTransaction, Signer, Keypair } from '@solana/web3.js';
+import { wallet, connection } from "./config.js";
+
+
+
+// Usage
 
 // Interface pour la réponse API Jupiter Quote
 interface JupiterQuoteResponse {
@@ -25,7 +30,7 @@ interface ResultatCotation {
  * @param slippageBps Slippage en BPS (default 50 = 0.5%)
  * @returns sortieLamports en BN et données brutes, ou null en cas d'erreur
  */
-export async function obtenirCotationJupiter(
+export async function CotationJupiter(
     inputMint: string,
     outputMint: string,
     montant: number | BN,
@@ -76,7 +81,7 @@ const JUPITER_PRICE_URL = "https://lite-api.jup.ag/price/v3?ids=";
  * @param tokenAddress Adresse du token
  * @returns prix USD ou null si non trouvé
  */
-export async function recupererPrixJupiter(tokenAddress: string): Promise<number | null> {
+export async function recupererPrixToken(tokenAddress: string): Promise<number | null> {
     try {
         const res = await fetch(`${JUPITER_PRICE_URL}${tokenAddress}`);
         if (!res.ok) {
@@ -94,6 +99,139 @@ export async function recupererPrixJupiter(tokenAddress: string): Promise<number
         }
     } catch (err) {
         //console.error(`Erreur recupererPrixJupiter pour ${tokenAddress}:`, err);
+        return null;
+    }
+}
+//RECUPERER LA BALANCE EN SOL OU SPL DE N IMPORT QUELLE TOKEN D UN WALLET SOLANA 
+export interface TokenBalance {
+    amount_lamports: number;
+    amount_token: number;
+}
+
+interface NativeHoldingResponse {
+    amount: number;
+    uiAmount: number;
+}
+
+interface TokenInfo {
+    amount: number;
+    uiAmount: number;
+}
+
+interface TokenHoldingsResponse {
+    tokens: Record<string, TokenInfo[]>;
+}
+
+export async function getBalance(
+    walletAddress: string,
+    tokenMint: string
+): Promise<TokenBalance> {
+    let amount_lamports = 0;
+    let amount_token = 0.0;
+
+    try {
+        const isSol = tokenMint.toLowerCase().includes("sol");
+        const url = isSol
+            ? `https://lite-api.jup.ag/ultra/v1/holdings/${walletAddress}/native`
+            : `https://lite-api.jup.ag/ultra/v1/holdings/${walletAddress}`;
+
+        const response = await fetch(url);
+        const resp = (await response.json()) as NativeHoldingResponse | TokenHoldingsResponse;
+
+        if (resp) {
+            if (isSol) {
+                const data = resp as NativeHoldingResponse;
+                amount_lamports = data.amount;
+                amount_token = data.uiAmount;
+            } else {
+                const data = resp as TokenHoldingsResponse;
+                const tokenData = data.tokens[tokenMint]?.[0];
+                if (tokenData) {
+                    amount_lamports = tokenData.amount;
+                    amount_token = tokenData.uiAmount;
+                }
+            }
+        }
+
+        return { amount_lamports, amount_token };
+
+    } catch (err: any) {
+        console.error("Erreur GetBalance:", err.message);
+        return { amount_lamports, amount_token };
+    }
+}
+
+
+//fonction pour executer un swap sur jupiter
+
+
+
+export async function executeSwapJupiter(
+    quoteResponse: any,
+): Promise<any | null> {
+    try {
+        // On récupère la réponse JSON du POST vers l’API Jupiter
+        interface JupiterSwapResponse {
+            swapTransaction?: string;
+            // si la transaction est dans un sous-objet, tu peux mettre :
+            // data?: { swapTransaction?: string; [key: string]: any }
+            [key: string]: any;
+        }
+
+        const response = await fetch("https://lite-api.jup.ag/swap/v1/swap", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                quoteResponse,
+                userPublicKey: wallet.publicKey.toString(),
+                wrapAndUnwrapSol: true,
+            }),
+        });
+
+        // 👇 cast pour indiquer le type à TypeScript
+        const data = (await response.json()) as JupiterSwapResponse;
+
+        // maintenant TypeScript sait que swapTransaction existe éventuellement
+        const swapTransaction = data.swapTransaction; // ou data.data?.swapTransaction
+
+        //console.log(swapTransaction);
+
+
+        if (!data.swapTransaction) {
+            console.warn("Aucune transaction de swap reçue depuis Jupiter.");
+            return null;
+        }
+
+        // Désérialisation
+        const swapTransactionBuf = Buffer.from(data.swapTransaction, "base64");
+        const transaction = VersionedTransaction.deserialize(swapTransactionBuf);
+
+        // Signature
+        transaction.sign([wallet]);
+        // await delay(500);// pause demi seconde pour eviter les erreurs 429
+        // Récupération du dernier blockhash
+        const latestBlockHash = await connection.getLatestBlockhash();
+
+        // Envoi de la transaction brute
+        const rawTransaction = transaction.serialize();
+        const txid = await connection.sendRawTransaction(rawTransaction, {
+            skipPreflight: true,
+            maxRetries: 2,
+        });
+
+        // Confirmation de la transaction
+        await connection.confirmTransaction({
+            blockhash: latestBlockHash.blockhash,
+            lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+            signature: txid,
+        });
+
+        console.log(`https://solscan.io/tx/${txid}`);
+
+        return transaction;
+
+    } catch (err) {
+        console.error("Erreur lors du swap Jupiter :", err);
         return null;
     }
 }

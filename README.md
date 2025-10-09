@@ -132,3 +132,4 @@ console.log(quote);
 MIT License © Aliou Ba
 
 ---
+don/donate solana address wallet:  6uMk4Ka2ifEXytCGnjNDmhzTmmNC4tCREbhZCx28X8Kf

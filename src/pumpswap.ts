@@ -109,7 +109,7 @@ function instructionEnJSON(instruction: TransactionInstruction) {
  * @param coté "buy" ou "sell"
  * @param slippage tolérance en %
  */
-export async function obtenirCotationPumpSwap(pool: PoolInfos, montant: BN, coté: string, slippage: number) {
+export async function CotationPumpSwap(pool: PoolInfos, montant: BN, coté: string, slippage: number) {
     try {
         const adressePool = new PublicKey(pool.pool_address);
 
@@ -130,7 +130,7 @@ export async function obtenirCotationPumpSwap(pool: PoolInfos, montant: BN, cot�
         // Simulation de l'achat
         const { montantSortie, instructions } = await acheterBaseAvecQuote(etatSolana, new BN(1_000_000_000), 5);
         console.log("Tu recevras environ", montantSortie.toString(), "tokens de base");
-        return { instructions,montantSortie};
+        return { instructions, montantSortie };
 
     } catch (err) {
         console.log("Erreur lors de la récupération de la cotation PumpSwap:", err);

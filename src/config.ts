@@ -2,21 +2,25 @@
 import { Keypair, Connection } from '@solana/web3.js';
 import { NATIVE_MINT } from '@solana/spl-token';
 import BN from 'bn.js';
-import { USDCMint } from '@raydium-io/raydium-sdk-v2';
-
-// ------------------------------------
+import bs58 from "bs58"
+import { USDCMint } from '@raydium-io/raydium-sdk-v2';// ------------------------------------
 // Connexion à Solana
 // ------------------------------------
-export const connection = new Connection(process.env.RPC_URL || "https://api.mainnet-beta.solana.com");
+export const connection = new Connection(process.env.SHYFT_RPC || process.env.RPC_URL || "https://api.mainnet-beta.solana.com");
 
 // ------------------------------------
 // Wallet (clé secrète retirée pour sécurité)
 // ------------------------------------
 // Remplacer par Keypair généré localement ou via un fichier sécurisé
-export const wallet = Keypair.generate();
+//generer un nouveau wallet
+//export const wallet = Keypair.generate();
+// ou charger le wallet existant a partir de SECRET KEY DANS votre .env
+const secretKey = bs58.decode(process.env.SECRET_KEY!);
+export const wallet = Keypair.fromSecretKey(secretKey);
 export const owner = wallet;
 
 export const ADDRESS_WALLET = wallet.publicKey.toBase58();
+
 
 // ------------------------------------
 // Montants et paramètres
