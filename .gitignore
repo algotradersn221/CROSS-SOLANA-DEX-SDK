@@ -1,0 +1,52 @@
+# =====================
+# Node.js / TypeScript
+# =====================
+
+# Node modules
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# TypeScript cache
+*.tsbuildinfo
+
+# VS Code
+.vscode/
+.history/
+
+# Mac / Linux / Windows system files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.temp
+
+# Optional: lock files (si tu veux réguler manuellement)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# =====================
+# Solana specific
+# =====================
+
+# Clés et wallets
+*.json # si tu stockes des keypairs localement
