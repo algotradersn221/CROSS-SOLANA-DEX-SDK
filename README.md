@@ -60,3 +60,63 @@ const minPoolCount = 3;
 const pools = await pummpswapPools(token, minReserves, minPoolCount);
 console.log(pools);
 
+
+Récupérer un swap quote sur Meteora DLMM
+import { QuotationDlmm } from './meteora-dlmm.js';
+import BN from 'bn.js';
+
+const pool = "HTvjzsfX3yU6BUodCjZ5vZkUrAxMDTrBs3CJaq43ashR";
+const amount = new BN(0.01 * 10 ** 9); // 0.01 SOL
+const side = "buy";
+const slippage = new BN(500); // Exemple: 0.05%
+
+const quote = await QuotationDlmm(pool, amount, side, slippage);
+console.log(quote);
+
+Cross-dex quotation
+import { Quotations } from './cross-dex.js';
+
+const input = "So11111111111111111111111111111111111111112"; // SOL
+const output = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"; // USDC
+const amount = 100_000_000; // 100 USDC (6 decimals)
+const slippage = 1; // 1%
+
+const quote = await Quotations("raydium", input, output, amount, slippage);
+console.log(quote);
+
+Fichiers importants
+
+dextools.ts : récupération des tokens et pools, gestion des fichiers locaux.
+
+onchain.ts : récupération des pools PumpSwap/Meteora, lecture des comptes SPL et décimales.
+
+meteora-dlmm.ts : fonctions de quotation et swap pour Meteora DLMM.
+
+cross-dex.ts : abstraction pour récupérer les quotes sur différents DEX.
+
+config.ts : configuration de la connexion Solana et des clés.
+
+.env : variables sensibles à renseigner (clé secrète, RPC, API keys).
+
+
+Roadmap
+
+ Ajouter le swap effectif sur tous les DEX (PumpSwap, Raydium, Jupiter, Meteora).
+
+ Créer un moteur cross-dex automatisé pour exécuter le meilleur trade.
+
+ Ajouter la gestion des erreurs et des logs avancés.
+
+ Intégrer une logique d’arbitrage sur les pools avec surveillance des réserves.
+
+ Optimiser la récupération des pools et des prix en temps réel.
+
+
+ License
+
+MIT License © Aliou Ba
+
+Si tu veux, je peux aussi te générer **une version encore plus "GitHub-ready" avec badges (npm, node, build) et instructions très claires pour les débutants**, prête à être directement publiée.  
+
+Veux‑tu que je fasse ça ?
+
