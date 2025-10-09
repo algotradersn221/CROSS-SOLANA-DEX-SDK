@@ -1,4 +1,3 @@
-Voici une version légèrement restructurée et formatée de ton README pour qu’il soit plus lisible et cohérent, tout en conservant ton style :
 
 ---
 
