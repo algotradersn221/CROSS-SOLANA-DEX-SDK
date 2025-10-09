@@ -29,7 +29,8 @@ Cloner le projet et installer **toutes les dépendances** en une seule commande 
 ```bash
 git clone https://github.com/votre-utilisateur/solana-cross-dex-sdk.git
 cd solana-cross-dex-sdk
-npm install @solana/web3.js @solana/spl-token @raydium-io/raydium-sdk-v2 node-fetch bn.js dotenv bs58 @meteora-ag/dlmm
+npm install @solana/web3.js@1.98.4 @solana/spl-token@0.4.3 @raydium-io/raydium-sdk-v2@0.2.29-alpha @meteora-ag/dlmm@1.7.5 @pump-fun/pump-swap-sdk@1.7.9 @types/bn.js@5.2.0 @types/bs58@4.0.4 dotenv@17.2.3 node-fetch@3.3.2 bs58@5.0.0
+
 ```
 
 ---
