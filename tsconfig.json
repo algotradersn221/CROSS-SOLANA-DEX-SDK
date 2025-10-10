@@ -7,12 +7,23 @@
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "skipLibCheck": true,
-        "outDir": "dist"
+        "outDir": "dist",
+        "baseUrl": ".",
+        "paths": {
+            "@/": ["srcv2/"],
+            "@/api/*": ["srcv2/api/*"],
+            "@/business/*": ["srcv2/business/*"],
+            "@/data/*": ["srcv2/data/*"],
+            "@/services/*": ["srcv2/services/*"],
+            "@/types/*": ["srcv2/types/*"],
+            "@/utils/*": ["srcv2/utils/*"]
+        }
     },
     "ts-node": {
         "esm": true
     },
     "include": [
-        "src"
+        "src",
+        "srcv2"
     ]
 }

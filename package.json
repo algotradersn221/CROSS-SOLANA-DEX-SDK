@@ -3,11 +3,16 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "node --loader ts-node/esm ./src/index.ts"
+    "start": "node --loader ts-node/esm ./src/index.ts",
+    "start:v2": "tsx ./srcv2/index.ts",
+    "start:v2:example": "tsx ./srcv2/example.ts",
+    "build": "tsc --build",
+    "dev:v2": "tsx --watch ./srcv2/index.ts"
   },
   "devDependencies": {
     "@types/node-fetch": "^2.6.13",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.6",
     "typescript": "^5.9.3"
   },
   "dependencies": {
