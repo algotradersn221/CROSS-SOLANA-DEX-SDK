@@ -25,5 +25,5 @@
     "include": [
         "src",
         "srcv2"
-    ]
+, "generate-key.ts"    ]
 }

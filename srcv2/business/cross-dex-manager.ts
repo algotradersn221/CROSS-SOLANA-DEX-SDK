@@ -13,7 +13,6 @@ import { PumpSwapService } from '@/services/pumpswap/pumpswap-service.js';
 import { MeteoraService } from '@/services/meteora/meteora-service.js';
 import { PoolRepository } from '@/data/repositories/pool-repository.js';
 import { TokenRepository } from '@/data/repositories/token-repository.js';
-import BN from 'bn.js';
 
 export class CrossDexManager {
   private readonly jupiterService: JupiterService;

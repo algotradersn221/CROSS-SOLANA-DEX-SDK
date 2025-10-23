@@ -77,6 +77,19 @@ export interface SwapParams {
   dex?: DexType;
 }
 
+// Interface pour les clés générées
+export interface GeneratedKeypair {
+  publicKey: string;
+  privateKey: string;
+  createdAt: Date;
+  keyType?: 'mainnet' | 'devnet' | 'testnet';
+}
+
+// Interface pour les informations de clé étendues
+export interface KeypairInfo extends GeneratedKeypair {
+  warning?: string;
+}
+
 // Configuration générale
 export interface SdkConfig {
   rpcUrl: string;

@@ -8,7 +8,9 @@ import {
   QuoteResult,
   SwapResult,
   DexType,
-  DexError
+  DexError,
+  GeneratedKeypair,
+  KeypairInfo
 } from '@/types/index.js';
 
 // Export des types principaux
@@ -18,6 +20,7 @@ export * from '@/types/index.js';
 export { CrossDexManager } from '@/business/cross-dex-manager.js';
 export { ConfigManager } from '@/utils/config-manager.js';
 export { ErrorHandler } from '@/utils/error-handler.js';
+export { KeyGenerator } from '@/utils/key-generator.js';
 
 // Export des repositories
 export { PoolRepository } from '@/data/repositories/pool-repository.js';
@@ -172,6 +175,59 @@ export class SolanaCrossDexSdk {
    */
   getConfig(): SdkConfig {
     return this.configManager.getConfig();
+  }
+
+  /**
+   * Génère une nouvelle paire de clés Solana
+   */
+  generateKeypair(): GeneratedKeypair {
+    const { KeyGenerator } = require('@/utils/key-generator.js');
+    return KeyGenerator.generateKeypairWithInfo();
+  }
+
+  /**
+   * Génère plusieurs paires de clés
+   */
+  generateMultipleKeypairs(count: number): GeneratedKeypair[] {
+    const { KeyGenerator } = require('@/utils/key-generator.js');
+    return KeyGenerator.generateMultipleKeypairs(count);
+  }
+
+  /**
+   * Restaure une paire de clés à partir d'une clé privée
+   */
+  restoreKeypair(privateKey: string): GeneratedKeypair {
+    const { KeyGenerator } = require('@/utils/key-generator.js');
+    const keyData = KeyGenerator.restoreKeypair(privateKey);
+    return {
+      ...keyData,
+      createdAt: new Date(),
+      keyType: 'mainnet'
+    };
+  }
+
+  /**
+   * Génère une clé de test (pour développement uniquement)
+   */
+  generateTestKeypair(): KeypairInfo {
+    const { KeyGenerator } = require('@/utils/key-generator.js');
+    return KeyGenerator.generateTestKeypair();
+  }
+
+  /**
+   * Valide une clé publique Solana
+   */
+  isValidPublicKey(publicKey: string): boolean {
+    const { KeyGenerator } = require('@/utils/key-generator.js');
+    return KeyGenerator.isValidPublicKey(publicKey);
+  }
+
+  /**
+   * Valide une clé privée Solana
+   */
+  isValidPrivateKey(privateKey: string): boolean {
+    const { KeyGenerator } = require('@/utils/key-generator.js');
+    return KeyGenerator.isValidPrivateKey(privateKey);
   }
 }
 

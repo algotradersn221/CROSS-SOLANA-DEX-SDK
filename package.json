@@ -7,7 +7,14 @@
     "start:v2": "tsx ./srcv2/index.ts",
     "start:v2:example": "tsx ./srcv2/example.ts",
     "build": "tsc --build",
-    "dev:v2": "tsx --watch ./srcv2/index.ts"
+    "dev:v2": "tsx --watch ./srcv2/index.ts",
+    "generate-key": "tsx ./srcv2/generate-key.ts",
+    "generate-env-key": "tsx ./srcv2/generate-env-key.ts",
+    "generate-key-simple": "tsx ./generate-key-simple.ts",
+    "generate-key-v2": "tsx ./srcv2/generate-key-v2.ts",
+    "key-example": "tsx ./srcv2/examples/key-generation-example.ts",
+    "key-usage-example": "tsx ./srcv2/examples/key-usage-example.ts",
+    "test-rpc": "tsx ./test-rpc-connectivity.ts"
   },
   "devDependencies": {
     "@types/node-fetch": "^2.6.13",
@@ -22,6 +29,7 @@
     "@solana/web3.js": "^1.98.4",
     "@types/bn.js": "^5.2.0",
     "@types/bs58": "^4.0.4",
+    "bs58": "^5.0.0",
     "dotenv": "^17.2.3",
     "node-fetch": "^3.3.2"
   }
